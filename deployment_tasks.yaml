@@ -1,0 +1,39 @@
+- id: kaminario_parser
+  type: puppet
+  version: 2.1.0
+  groups: [cinder,primary-controller,controller]
+  requires: [top-role-cinder]
+  required_for: [kaminario_cinder]
+  condition:
+    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
+  parameters:
+    puppet_manifest: puppet/manifests/cinder_parser.pp
+    puppet_modules:  puppet/modules:/etc/puppet/modules
+    timeout: 360
+
+- id: kaminario_cinder
+  type: puppet
+  version: 2.1.0
+  groups: [cinder]
+  requires: [kaminario_parser]
+  required_for: [deploy_end]
+  condition:
+    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
+  parameters:
+    puppet_manifest: puppet/manifests/cinder_kaminario.pp
+    puppet_modules:  puppet/modules:/etc/puppet/modules
+    timeout: 360
+
+- id: kaminario_types
+  type: puppet
+  version: 2.1.0
+  groups: [primary-controller]
+  requires: [openstack-cinder]
+  required_for: [deploy_end]
+  condition:
+    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
+  parameters:
+    puppet_manifest: puppet/manifests/cinder_type.pp
+    puppet_modules: puppet/modules:/etc/puppet/modules
+    timeout: 360
+
