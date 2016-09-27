@@ -5,13 +5,13 @@ title: Kaminario For Cinder
 # Plugin version
 version: '1.0.0'
 # Description
-description: Enable Kaminario Storage Array as a Cinder backend
+description: Enable Kaminario K2 All-Flash Array as a Cinder backend
 # Required fuel version
 fuel_version: ['9.0']
 # Specify license of your plugin
 licenses: ['Apache License Version 2.0']
 # Specify author or company name
-authors: ['Biarca']
+authors: ['Kaminario','Biarca']
 # A link to the plugin's page
 homepage: 'https://github.com/openstack/fuel-plugin-cinder-kaminario'
 # Specify a group which your plugin implements, possible options:
