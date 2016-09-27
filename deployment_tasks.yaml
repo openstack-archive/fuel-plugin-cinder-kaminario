@@ -2,8 +2,8 @@
   type: puppet
   version: 2.1.0
   groups: [cinder,primary-controller,controller]
-  requires: [top-role-cinder]
-  required_for: [kaminario_cinder]
+  requires: [openstack-cinder,top-role-cinder,netconfig]
+  required_for: [kaminario_cinder,kaminario_types]
   condition:
     yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
   parameters:
@@ -15,7 +15,7 @@
   type: puppet
   version: 2.1.0
   groups: [cinder]
-  requires: [kaminario_parser]
+  requires: [kaminario_parser,top-role-cinder]
   required_for: [deploy_end]
   condition:
     yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
@@ -28,7 +28,7 @@
   type: puppet
   version: 2.1.0
   groups: [primary-controller]
-  requires: [openstack-cinder]
+  requires: [kaminario_parser]
   required_for: [deploy_end]
   condition:
     yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
@@ -37,3 +37,13 @@
     puppet_modules: puppet/modules:/etc/puppet/modules
     timeout: 360
 
+- id: kaminario_multipath
+  type: puppet
+  version: 2.1.0
+  groups: [compute]
+  requires: [top-role-compute]
+  required_for: [deploy_end]
+  parameters:
+    puppet_manifest: puppet/manifests/cinder_multipath.pp
+    puppet_modules:  puppet/modules:/etc/puppet/modules
+    timeout: 360

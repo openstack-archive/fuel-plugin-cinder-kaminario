@@ -150,9 +150,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_0.value == false"
         action: 'hide'
@@ -164,8 +164,37 @@ attributes:
     weight: 80
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_0.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_0.value == false "
         action: 'hide'
+
+  enable_multipath_0:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 85
+    type: 'checkbox'
+ 
+  suppress_logs_0:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 86
+    type: 'checkbox'
+
+  filter_function_0:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 87
+    type: "text"
+
+  oversubscription_ratio_0:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 88
+    type: 'checkbox'
+ 
 
   add_backend_1:
     value: false
@@ -330,9 +359,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_1.value == false"
         action: 'hide'
@@ -344,8 +373,50 @@ attributes:
     weight: 165
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_1.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_1.value == false"
         action: 'hide'
+
+  enable_multipath_1:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 170
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  suppress_logs_1:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 171
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  filter_function_1:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 172
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
+  oversubscription_ratio_1:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 173
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
 
 
   add_backend_2:
@@ -513,9 +584,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_2.value == false"
         action: 'hide'
@@ -527,8 +598,51 @@ attributes:
     weight: 250
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_2.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_2.value == false"
         action: 'hide'
+
+  enable_multipath_2:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 260
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  suppress_logs_2:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 261
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+  
+  filter_function_2:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 262
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
+  oversubscription_ratio_2:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 263
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
 
   add_backend_3:
     value: false
@@ -694,9 +808,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_3.value == false"
         action: 'hide'
@@ -708,8 +822,50 @@ attributes:
     weight: 335
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_3.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_3.value == false"
         action: 'hide'
+
+  enable_multipath_3:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 340
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  suppress_logs_3:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 341
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  filter_function_3:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 342
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
+  oversubscription_ratio_3:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 343
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
 
   add_backend_4:
     value: false
@@ -877,9 +1033,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_4.value == false"
         action: 'hide'
@@ -891,8 +1047,51 @@ attributes:
     weight: 420
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_4.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_4.value == false"
         action: 'hide'
+
+  enable_multipath_4:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 425
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  suppress_logs_4:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 426
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  filter_function_4:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 427
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
+  oversubscription_ratio_4:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 428
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
 
   add_backend_5:
     value: false
@@ -1060,9 +1259,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Deduplication"
+        label: "Enable Non Deduplication"
       - data: "replication_dedup"
-        label: "Enable both Replication and Deduplication"
+        label: "Enable both Replication and Non Deduplication"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_5.value == false"
         action: 'hide'
@@ -1074,5 +1273,45 @@ attributes:
     weight: 505
     type: 'checkbox'
     restrictions:
-      - condition: "settings:cinder_kaminario.create_type_5.value == false or (settings:cinder_kaminario.default_type_0.value == false or settings:cinder_kaminario.default_type_1.value == false or settings:cinder_kaminario.default_type_2.value == false or settings:cinder_kaminario.default_type_3.value == false or settings:cinder_kaminario.default_type_4.value == false or settings:cinder_kaminario.default_type_5.value == false)"
+      - condition: "settings:cinder_kaminario.create_type_5.value == false"
         action: 'hide'
+
+  enable_multipath_5:
+    value: false
+    label: 'Enable Multipath'
+    description: 'Enable multipath for cinder volumes'
+    weight: 510
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  suppress_logs_5:
+    value: false
+    label: 'Suppress Logs'
+    description: 'Suppress Additional logs created by krest'
+    weight: 511
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  filter_function_5:
+    value: ""
+    label: 'Filter Function'
+    description: 'Filter function for backend'
+    weight: 512
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  oversubscription_ratio_5:
+    value: false
+    label: 'Oversubscription Ratio'
+    description: 'Enable Oversubscription Ratio for backend'
+    weight: 513
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
