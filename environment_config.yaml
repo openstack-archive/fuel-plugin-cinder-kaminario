@@ -13,7 +13,7 @@ attributes:
     type: "radio"
     weight: 10
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -37,7 +37,7 @@ attributes:
   storage_ip_0:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 20
     type: "text"
     regex:
@@ -47,7 +47,7 @@ attributes:
   storage_user_0:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 25
     type: "text"
     regex:
@@ -57,14 +57,14 @@ attributes:
   storage_password_0:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide password of kaminario K2 All-Flash array'
     weight: 30
     type: "password"
 
   add_backend_0:
     value: true
-    label: 'Add a new kaminario backend or  new kaminario Array'
-    description: 'Add a new kaminario backend or  scale an existing backend'
+    label: 'Add a new kaminario backend or new kaminario Array'
+    description: 'Add a new kaminario backend or scale an existing backend'
     weight: 35
     type: 'checkbox'
     restrictions:
@@ -74,13 +74,13 @@ attributes:
   enable_replication_0:
     value: false
     label: 'Enable Replication'
-    description: Enable replication for Kaminario Array
+    description: 'Enable replication for Kaminario Array'
     weight: 40
     type: 'checkbox'
 
   replication_ip_0:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 45
     type: "text"
@@ -112,9 +112,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_0:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 60
     type: "text"
     restrictions:
@@ -150,9 +150,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_0.value == false"
         action: 'hide'
@@ -160,7 +160,7 @@ attributes:
   default_type_0:
     value: false
     label: 'Default Type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 80
     type: 'checkbox'
     restrictions:
@@ -182,32 +182,60 @@ attributes:
     type: 'checkbox'
 
   filter_function_0:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 87
     type: "text"
 
+  goodness_function_0:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 88
+    type: "text"
+
   oversubscription_ratio_0:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 88
+    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
+    weight: 89
     type: 'checkbox'
- 
+
+  scheduler_default_weighers:
+    value: "CapacityWeigher"
+    label: 'Scheduler  weighers'
+    description: 'Default weighers for scheduler. For enabling multiple weighers, provide weighers seperated by ","'
+    weight: 90
+    type: "text" 
+
+  scheduler_default_filters:
+    value: "DriverFilters"
+    label: 'Scheduler filters'
+    description: 'Default filters for scheduler. For enabling multiple weighers, provide weighers seperated by ","'
+    weight: 91
+    type: "text"
+
+
+  rpc_response_timeout:
+    value: "60"
+    label: 'RPC timeout'
+    description: 'Timeout for RPC. Default timeout is 60'
+    weight: 92
+    type: "text"
 
   add_backend_1:
     value: false
     label: 'Add a new kaminario backend or scale an existing backend'
     description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 90
+    weight: 93
     type: 'checkbox'
   
   storage_protocol_1:
     type: "radio"
     weight: 95
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -240,7 +268,7 @@ attributes:
   storage_ip_1:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 110
     type: "text"
     restrictions:
@@ -253,7 +281,7 @@ attributes:
   storage_user_1:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 115
     type: "text"
     regex:
@@ -266,7 +294,7 @@ attributes:
   storage_password_1:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide password of kaminario K2 All-Flash array'
     weight: 120
     type: "password"
     restrictions:
@@ -285,7 +313,7 @@ attributes:
 
   replication_ip_1:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 130
     type: "text"
@@ -317,9 +345,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_1:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 145
     type: "text"
     restrictions:
@@ -359,9 +387,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_1.value == false"
         action: 'hide'
@@ -369,7 +397,7 @@ attributes:
   default_type_1:
     value: false
     label: 'Default Type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 165
     type: 'checkbox'
     restrictions:
@@ -397,7 +425,7 @@ attributes:
          action: 'hide'
 
   filter_function_1:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 172
@@ -406,12 +434,21 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  goodness_function_1:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 173
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
 
   oversubscription_ratio_1:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 173
+    description: ''
+    weight: 174
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
@@ -433,7 +470,7 @@ attributes:
     type: "radio"
     weight: 180
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -466,7 +503,7 @@ attributes:
   storage_ip_2:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 195
     type: "text"
     restrictions:
@@ -479,7 +516,7 @@ attributes:
   storage_user_2:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 200
     type: "text"
     regex:
@@ -492,7 +529,7 @@ attributes:
   storage_password_2:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide password of kaminario K2 All-Flash array'
     weight: 205
     type: "password"
     restrictions:
@@ -511,7 +548,7 @@ attributes:
 
   replication_ip_2:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 215
     type: "text"
@@ -543,9 +580,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_2:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 230
     type: "text"
     restrictions:
@@ -584,9 +621,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable  nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_2.value == false"
         action: 'hide'
@@ -594,7 +631,7 @@ attributes:
   default_type_2:
     value: false
     label: 'Default_type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 250
     type: 'checkbox'
     restrictions:
@@ -622,7 +659,7 @@ attributes:
          action: 'hide'
   
   filter_function_2:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 262
@@ -631,12 +668,21 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  goodness_function_2:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 263
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
 
   oversubscription_ratio_2:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 263
+    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
+    weight: 264
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -658,7 +704,7 @@ attributes:
     type: "radio"
     weight: 270
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -690,7 +736,7 @@ attributes:
   storage_ip_3:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 285
     type: "text"
     restrictions:
@@ -703,7 +749,7 @@ attributes:
   storage_user_3:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 290
     type: "text"
     regex:
@@ -716,7 +762,7 @@ attributes:
   storage_password_3:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide management password of kaminario K2 All-Flash array'
     weight: 295
     type: "password"
     restrictions:
@@ -735,7 +781,7 @@ attributes:
 
   replication_ip_3:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 305
     type: "text"
@@ -767,9 +813,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_3:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 320
     type: "text"
     restrictions:
@@ -808,9 +854,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_3.value == false"
         action: 'hide'
@@ -818,7 +864,7 @@ attributes:
   default_type_3:
     value: false
     label: 'Default_type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 335
     type: 'checkbox'
     restrictions:
@@ -846,7 +892,7 @@ attributes:
          action: 'hide'
 
   filter_function_3:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 342
@@ -855,12 +901,21 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  goodness_function_3:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 343
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
 
   oversubscription_ratio_3:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 343
+    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
+    weight: 344
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -881,7 +936,7 @@ attributes:
     type: "radio"
     weight: 350
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -914,7 +969,7 @@ attributes:
   storage_ip_4:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 365
     type: "text"
     restrictions:
@@ -927,7 +982,7 @@ attributes:
   storage_user_4:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 370
     type: "text"
     regex:
@@ -940,7 +995,7 @@ attributes:
   storage_password_4:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide password of kaminario K2 All-Flash array'
     weight: 375
     type: "password"
     restrictions:
@@ -959,7 +1014,7 @@ attributes:
 
   replication_ip_4:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 385
     type: "text"
@@ -991,9 +1046,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_4:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 400
     type: "text"
     restrictions:
@@ -1033,9 +1088,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_4.value == false"
         action: 'hide'
@@ -1043,7 +1098,7 @@ attributes:
   default_type_4:
     value: false
     label: 'Default type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 420
     type: 'checkbox'
     restrictions:
@@ -1071,7 +1126,7 @@ attributes:
          action: 'hide'
 
   filter_function_4:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 427
@@ -1080,12 +1135,21 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  goodness_function_4:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 428
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
 
   oversubscription_ratio_4:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 428
+    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
+    weight: 429
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -1107,7 +1171,7 @@ attributes:
     type: "radio"
     weight: 435
     value: "FC"
-    label: "Kaminario Storage Protocol"
+    label: "Storage protocol to be used on the data path with storage system"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -1140,7 +1204,7 @@ attributes:
   storage_ip_5:
     value: ""
     label: 'Kaminario Storage Hostname/IP'
-    description: 'IP address of Kaminario Storage Array'
+    description: 'Provide management IP of kaminario K2 All-Flash array'
     weight: 450
     type: "text"
     restrictions:
@@ -1153,7 +1217,7 @@ attributes:
   storage_user_5:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario Storage Array'
+    description: 'Provide username of kaminario K2 All-Flash array'
     weight: 455
     type: "text"
     regex:
@@ -1166,7 +1230,7 @@ attributes:
   storage_password_5:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario Storage Array'
+    description: 'Provide password of kaminario K2 All-Flash array'
     weight: 460
     type: "password"
     restrictions:
@@ -1185,7 +1249,7 @@ attributes:
 
   replication_ip_5:
     value: ""
-    label: 'Ipaddress'
+    label: 'IPaddress'
     description: 'Ipaddress of Kaminario replication array'
     weight: 470
     type: "text"
@@ -1217,9 +1281,9 @@ attributes:
         action: 'hide'
 
   replication_rpo_5:
-    value: ""
+    value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 1 minute or multiple of 5 minutes'
+    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
     weight: 485
     type: "text"
     restrictions:
@@ -1259,9 +1323,9 @@ attributes:
       - data: "enable_replication_type"
         label: "Enable Replication"
       - data: "enable_dedup"
-        label: "Enable Non Deduplication"
+        label: "Enable nodedup"
       - data: "replication_dedup"
-        label: "Enable both Replication and Non Deduplication"
+        label: "Enable both Replication and nodedup"
     restrictions:
       - condition: "settings:cinder_kaminario.create_type_5.value == false"
         action: 'hide'
@@ -1269,7 +1333,7 @@ attributes:
   default_type_5:
     value: false
     label: 'Default Type'
-    description: 'Make this type as default'
+    description: 'Make this volume type as default volume type'
     weight: 505
     type: 'checkbox'
     restrictions:
@@ -1297,7 +1361,7 @@ attributes:
          action: 'hide'
 
   filter_function_5:
-    value: ""
+    value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
     description: 'Filter function for backend'
     weight: 512
@@ -1306,11 +1370,22 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  goodness_function_5:
+    value: ""
+    label: 'Goodness Function'
+    description: 'Goodness function for backend'
+    weight: 513
+    type: "text"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+
   oversubscription_ratio_5:
     value: false
     label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend'
-    weight: 513
+    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
+    weight: 514
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"

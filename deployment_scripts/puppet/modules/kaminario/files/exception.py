@@ -149,10 +149,6 @@ class GlanceConnectionFailed(CinderException):
     message = _("Connection to glance failed: %(reason)s")
 
 
-class ProgrammingError(CinderException):
-    message = _('Programming error in Cinder: %(reason)s')
-
-
 class NotAuthorized(CinderException):
     message = _("Not authorized.")
     code = 403
@@ -204,10 +200,6 @@ class InvalidVolumeType(Invalid):
     message = _("Invalid volume type: %(reason)s")
 
 
-class InvalidGroupType(Invalid):
-    message = _("Invalid group type: %(reason)s")
-
-
 class InvalidVolume(Invalid):
     message = _("Invalid volume: %(reason)s")
 
@@ -247,10 +239,6 @@ class DeviceUnavailable(Invalid):
     message = _("The device in the path %(path)s is unavailable: %(reason)s")
 
 
-class SnapshotUnavailable(VolumeBackendAPIException):
-    message = _("The snapshot is unavailable: %(data)s")
-
-
 class InvalidUUID(Invalid):
     message = _("Expected a uuid but received %(uuid)s.")
 
@@ -267,10 +255,6 @@ class VersionNotFoundForAPIMethod(Invalid):
 class InvalidGlobalAPIVersion(Invalid):
     message = _("Version %(req_ver)s is not supported by the API. Minimum "
                 "is %(min_ver)s and maximum is %(max_ver)s.")
-
-
-class MissingRequired(Invalid):
-    message = _("Missing required element '%(element)s' in request body.")
 
 
 class APIException(CinderException):
@@ -292,10 +276,6 @@ class RPCTimeout(CinderException):
     code = 502
 
 
-class Duplicate(CinderException):
-    pass
-
-
 class NotFound(CinderException):
     message = _("Resource could not be found.")
     code = 404
@@ -304,10 +284,6 @@ class NotFound(CinderException):
 
 class VolumeNotFound(NotFound):
     message = _("Volume %(volume_id)s could not be found.")
-
-
-class MessageNotFound(NotFound):
-    message = _("Message %(message_id)s could not be found.")
 
 
 class VolumeAttachmentNotFound(NotFound):
@@ -362,30 +338,6 @@ class VolumeTypeInUse(CinderException):
                 "volumes present with the type.")
 
 
-class GroupTypeNotFound(NotFound):
-    message = _("Group type %(group_type_id)s could not be found.")
-
-
-class GroupTypeNotFoundByName(GroupTypeNotFound):
-    message = _("Group type with name %(group_type_name)s "
-                "could not be found.")
-
-
-class GroupTypeAccessNotFound(NotFound):
-    message = _("Group type access not found for %(group_type_id)s / "
-                "%(project_id)s combination.")
-
-
-class GroupTypeSpecsNotFound(NotFound):
-    message = _("Group Type %(group_type_id)s has no specs with "
-                "key %(group_specs_key)s.")
-
-
-class GroupTypeInUse(CinderException):
-    message = _("Group Type %(group_type_id)s deletion is not allowed with "
-                "groups present with the type.")
-
-
 class SnapshotNotFound(NotFound):
     message = _("Snapshot %(snapshot_id)s could not be found.")
 
@@ -428,32 +380,6 @@ class ServiceNotFound(NotFound):
 
 class ServiceTooOld(Invalid):
     message = _("Service is too old to fulfil this request.")
-
-
-class WorkerNotFound(NotFound):
-    message = _("Worker with %s could not be found.")
-
-    def __init__(self, message=None, **kwargs):
-        keys_list = ('{0}=%({0})s'.format(key) for key in kwargs)
-        placeholder = ', '.join(keys_list)
-        self.message = self.message % placeholder
-        super(WorkerNotFound, self).__init__(message, **kwargs)
-
-
-class WorkerExists(Duplicate):
-    message = _("Worker for %(type)s %(id)s already exists.")
-
-
-class ClusterNotFound(NotFound):
-    message = _('Cluster %(id)s could not be found.')
-
-
-class ClusterHasHosts(Invalid):
-    message = _("Cluster %(id)s still has hosts.")
-
-
-class ClusterExists(Duplicate):
-    message = _("Cluster %(name)s already exists.")
 
 
 class HostNotFound(NotFound):
@@ -514,6 +440,10 @@ class FileNotFound(NotFound):
     message = _("File %(file_path)s could not be found.")
 
 
+class Duplicate(CinderException):
+    pass
+
+
 class VolumeTypeExists(Duplicate):
     message = _("Volume Type %(id)s already exists.")
 
@@ -529,23 +459,6 @@ class VolumeTypeEncryptionExists(Invalid):
 
 class VolumeTypeEncryptionNotFound(NotFound):
     message = _("Volume type encryption for type %(type_id)s does not exist.")
-
-
-class GroupTypeExists(Duplicate):
-    message = _("Group Type %(id)s already exists.")
-
-
-class GroupTypeAccessExists(Duplicate):
-    message = _("Group type access for %(group_type_id)s / "
-                "%(project_id)s combination already exists.")
-
-
-class GroupTypeEncryptionExists(Invalid):
-    message = _("Group type encryption for type %(type_id)s already exists.")
-
-
-class GroupTypeEncryptionNotFound(NotFound):
-    message = _("Group type encryption for type %(type_id)s does not exist.")
 
 
 class MalformedRequestBody(CinderException):
@@ -615,16 +528,8 @@ class SnapshotLimitExceeded(QuotaError):
     message = _("Maximum number of snapshots allowed (%(allowed)d) exceeded")
 
 
-class UnexpectedOverQuota(QuotaError):
-    message = _("Unexpected over quota on %(name)s.")
-
-
 class BackupLimitExceeded(QuotaError):
     message = _("Maximum number of backups allowed (%(allowed)d) exceeded")
-
-
-class ImageLimitExceeded(QuotaError):
-    message = _("Image quota exceeded")
 
 
 class DuplicateSfVolumeNames(Duplicate):
@@ -638,15 +543,6 @@ class VolumeTypeCreateFailed(CinderException):
 
 class VolumeTypeUpdateFailed(CinderException):
     message = _("Cannot update volume_type %(id)s")
-
-
-class GroupTypeCreateFailed(CinderException):
-    message = _("Cannot create group_type with "
-                "name %(name)s and specs %(group_specs)s")
-
-
-class GroupTypeUpdateFailed(CinderException):
-    message = _("Cannot update group_type %(id)s")
 
 
 class UnknownCmd(VolumeDriverException):
@@ -875,27 +771,14 @@ class VolumeGroupCreationFailed(CinderException):
     message = _('Failed to create Volume Group: %(vg_name)s')
 
 
-class VolumeNotDeactivated(CinderException):
-    message = _('Volume %(name)s was not deactivated in time.')
-
-
 class VolumeDeviceNotFound(CinderException):
     message = _('Volume device not found at %(device)s.')
 
 
 # Driver specific exceptions
-# Dell
-class DellDriverRetryableException(VolumeBackendAPIException):
-    message = _("Retryable Dell Exception encountered")
-
-
 # Pure Storage
 class PureDriverException(VolumeDriverException):
     message = _("Pure Storage Cinder driver failure: %(reason)s")
-
-
-class PureRetryableException(VolumeBackendAPIException):
-    message = _("Retryable Pure Storage Exception encountered")
 
 
 # SolidFire
@@ -1111,57 +994,24 @@ class XIODriverException(VolumeDriverException):
 
 
 # Violin Memory drivers
-class ViolinInvalidBackendConfig(VolumeDriverException):
+class ViolinInvalidBackendConfig(CinderException):
     message = _("Volume backend config is invalid: %(reason)s")
 
 
-class ViolinRequestRetryTimeout(VolumeDriverException):
+class ViolinRequestRetryTimeout(CinderException):
     message = _("Backend service retry timeout hit: %(timeout)s sec")
 
 
-class ViolinBackendErr(VolumeBackendAPIException):
+class ViolinBackendErr(CinderException):
     message = _("Backend reports: %(message)s")
 
 
-class ViolinBackendErrExists(VolumeBackendAPIException):
+class ViolinBackendErrExists(CinderException):
     message = _("Backend reports: item already exists")
 
 
-class ViolinBackendErrNotFound(NotFound):
+class ViolinBackendErrNotFound(CinderException):
     message = _("Backend reports: item not found")
-
-
-class ViolinResourceNotFound(NotFound):
-    message = _("Backend reports: %(message)s")
-
-
-class BadHTTPResponseStatus(VolumeDriverException):
-    message = _("Bad HTTP response status %(status)s")
-
-
-# ZADARA STORAGE VPSA driver exception
-class ZadaraServerCreateFailure(VolumeDriverException):
-    message = _("Unable to create server object for initiator %(name)s")
-
-
-class ZadaraServerNotFound(NotFound):
-    message = _("Unable to find server object for initiator %(name)s")
-
-
-class ZadaraVPSANoActiveController(VolumeDriverException):
-    message = _("Unable to find any active VPSA controller")
-
-
-class ZadaraAttachmentsNotFound(NotFound):
-    message = _("Failed to retrieve attachments for volume %(name)s")
-
-
-class ZadaraInvalidAttachmentInfo(Invalid):
-    message = _("Invalid attachment info for volume %(name)s: %(reason)s")
-
-
-class ZadaraVolumeNotFound(VolumeDriverException):
-    message = _("%(reason)s")
 
 
 # ZFSSA NFS driver exception.
@@ -1217,8 +1067,7 @@ class DotHillNotTargetPortal(CinderException):
 
 # Sheepdog
 class SheepdogError(VolumeBackendAPIException):
-    message = _("An error has occurred in SheepdogDriver. "
-                "(Reason: %(reason)s)")
+    message = _("An error has occured in SheepdogDriver. (Reason: %(reason)s)")
 
 
 class SheepdogCmdError(SheepdogError):
@@ -1277,16 +1126,3 @@ class KaminarioCinderDriverException(VolumeDriverException):
 
 class KaminarioRetryableException(VolumeDriverException):
     message = _("Kaminario retryable exception: %(reason)s")
-
-
-# Synology driver
-class SynoAPIHTTPError(CinderException):
-    message = _("HTTP exit code: [%(code)s]")
-
-
-class SynoAuthError(CinderException):
-    message = _("Synology driver authentication failed: %(reason)s.")
-
-
-class SynoLUNNotExist(CinderException):
-    message = _("LUN not found by UUID: %(uuid)s.")

@@ -1,21 +1,8 @@
-- id: kaminario_parser
-  type: puppet
-  version: 2.1.0
-  groups: [cinder,primary-controller,controller]
-  requires: [openstack-cinder,top-role-cinder,netconfig]
-  required_for: [kaminario_cinder,kaminario_types]
-  condition:
-    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
-  parameters:
-    puppet_manifest: puppet/manifests/cinder_parser.pp
-    puppet_modules:  puppet/modules:/etc/puppet/modules
-    timeout: 360
-
 - id: kaminario_cinder
   type: puppet
   version: 2.1.0
   groups: [cinder]
-  requires: [kaminario_parser,top-role-cinder]
+  requires: [top-role-cinder]
   required_for: [deploy_end]
   condition:
     yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
@@ -24,11 +11,24 @@
     puppet_modules:  puppet/modules:/etc/puppet/modules
     timeout: 360
 
+- id: kaminario_config
+  type: puppet
+  version: 2.1.0
+  groups: [primary-controller,controller]
+  requires: [openstack-cinder]
+  required_for: [deploy_end]
+  condition:
+    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
+  parameters:
+    puppet_manifest: puppet/manifests/cinder_controller_config.pp
+    puppet_modules: puppet/modules:/etc/puppet/modules
+    timeout: 360
+
 - id: kaminario_types
   type: puppet
   version: 2.1.0
   groups: [primary-controller]
-  requires: [kaminario_parser]
+  requires: [openstack-cinder]
   required_for: [deploy_end]
   condition:
     yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
@@ -47,3 +47,4 @@
     puppet_manifest: puppet/manifests/cinder_multipath.pp
     puppet_modules:  puppet/modules:/etc/puppet/modules
     timeout: 360
+
