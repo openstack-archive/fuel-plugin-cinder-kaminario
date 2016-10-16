@@ -41,7 +41,7 @@
   type: puppet
   version: 2.1.0
   groups: [compute]
-  requires: [top-role-compute]
+  requires: [top-role-compute,enable_nova_compute_service]
   required_for: [deploy_end]
   parameters:
     puppet_manifest: puppet/manifests/cinder_multipath.pp

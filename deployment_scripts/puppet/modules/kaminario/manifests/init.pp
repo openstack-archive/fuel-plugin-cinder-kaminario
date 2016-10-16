@@ -30,9 +30,9 @@ $plugin_settings = hiera('cinder_kaminario')
               num                    =>      $value
             }
     $minus1 = inline_template('<%= @value.to_i - 1 %>')
-    if "${minus1}" < '0' {
-        
-   }  else {
+    if $minus1 < '0' {
+
+  }  else {
         recursion { "value-${minus1}":
             value => $minus1,
         }
@@ -44,7 +44,7 @@ $plugin_settings = hiera('cinder_kaminario')
 define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storage_password,$storage_ip,$num,$cinder_node,$enable_replication,$replication_ip,$replication_login,$replication_rpo,$replication_password,$enable_multipath,$suppress_logs,$filter_function,$oversubscription_ratio,$goodness_function) {
 
   $sec_name = section_name( $storage_ip , $backend_name )
-  $config_file = "/etc/cinder/cinder.conf"
+  $config_file = '/etc/cinder/cinder.conf'
   if $cinder_node == hiera(user_node_name) {
   if $add_backend == true {
 
@@ -56,58 +56,58 @@ define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storag
         setting              => 'enabled_backends',
         subsetting           => $sec_name,
         subsetting_separator => ',',
-   }->
+  }->
     cinder_config {
-        "$sec_name/volume_backend_name" : value => $backend_name;
-        "$sec_name/san_ip"              : value => $storage_ip;
-        "$sec_name/san_login"           : value => $storage_user;
-        "$sec_name/san_password"        : value => $storage_password;
-   }
+        "${sec_name}/volume_backend_name" : value => $backend_name;
+        "${sec_name}/san_ip"              : value => $storage_ip;
+        "${sec_name}/san_login"           : value => $storage_user;
+        "${sec_name}/san_password"        : value => $storage_password;
+  }
 
   if $storage_protocol == 'FC'{
     cinder_config {
-        "$sec_name/volume_driver"       : value => "cinder.volume.drivers.kaminario.kaminario_fc.KaminarioFCDriver";
+        "${sec_name}/volume_driver"       : value => 'cinder.volume.drivers.kaminario.kaminario_fc.KaminarioFCDriver';
     }
   }
   elsif $storage_protocol == 'ISCSI'{
     cinder_config {
-        "$sec_name/volume_driver"       : value => "cinder.volume.drivers.kaminario.kaminario_iscsi.KaminarioISCSIDriver";
+        "${sec_name}/volume_driver"       : value => 'cinder.volume.drivers.kaminario.kaminario_iscsi.KaminarioISCSIDriver';
     }
   }
     if $enable_replication == true {
     $replication_device = get_replication_device($replication_ip, $replication_login , $replication_password , $replication_rpo)
     cinder_config {
-        "$sec_name/replication_device"       : value => $replication_device;
+        "${sec_name}/replication_device"       : value => $replication_device;
     }
     }
- 
+
     if $enable_multipath == true {
     cinder_config {
-        "$sec_name/use_multipath_for_image_xfer"           : value => "True";
-        "$sec_name/enforce_multipath_for_image_xfer"       : value => "True";
-    }   
+        "${sec_name}/use_multipath_for_image_xfer"           : value => 'True';
+        "${sec_name}/enforce_multipath_for_image_xfer"       : value => 'True';
+    }
     }
     if $suppress_logs == true {
     cinder_config {
-        "$sec_name/suppress_requests_ssl_warnings"         : value => "True";
+        "${sec_name}/suppress_requests_ssl_warnings"         : value => 'True';
     }
     }
 
     if $filter_function != '' {
     cinder_config {
-        "$sec_name/filter_function"                        : value => $filter_function;
+        "${sec_name}/filter_function"                        : value => $filter_function;
     }
     }
 
     if $goodness_function != '' {
     cinder_config {
-        "$sec_name/goodness_function"                      : value => $goodness_function;
-    }   
+        "${sec_name}/goodness_function"                      : value => $goodness_function;
     }
-    
+    }
+
     if $oversubscription_ratio == true {
     cinder_config {
-        "$sec_name/auto_calc_max_oversubscription_ratio"   : value => "True";
+        "${sec_name}/auto_calc_max_oversubscription_ratio"   : value => 'True';
     }
     }
 }
