@@ -30,9 +30,14 @@ $plugin_settings = hiera('cinder_kaminario')
 
   cinder_config {
     'DEFAULT/default_volume_type'             : value => $default_volume_type
-  }~> Exec[cinder_api]
+  }
 
-exec {'cinder_api':
-  command => '/usr/sbin/service cinder-api restart',}
-
+service { 'cinder_api':
+  ensure     => running,
+  name       => cinder-api,
+  enable     => true,
+  hasstatus  => true,
+  hasrestart => true,
+}
+Cinder_config<||> ~> Service['cinder-api']
 }

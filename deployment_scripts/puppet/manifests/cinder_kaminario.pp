@@ -3,7 +3,13 @@ notice('MODULAR: cinder_kaminario')
 
 class { 'kaminario::krest': }->
 class { 'kaminario::driver': }->
-class { 'kaminario::config': }~> Exec[cinder_volume]
+class { 'kaminario::config': } ~> Service['cinder_volume']
 
-exec {'cinder_volume':
-  command => '/usr/sbin/service cinder-volume restart',}
+service { 'cinder_volume':
+  ensure     => running,
+  name       => cinder-volume,
+  enable     => true,
+  hasstatus  => true,
+  hasrestart => true,
+
+}
