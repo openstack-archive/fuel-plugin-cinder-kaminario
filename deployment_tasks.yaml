@@ -43,6 +43,8 @@
   groups: [compute]
   requires: [top-role-compute,enable_nova_compute_service]
   required_for: [deploy_end]
+  condition:
+    yaql_exp: "changedAny($.get('cinder_kaminario').enable_multipath_0 ,$.get('cinder_kaminario').enable_multipath_1 ,$.get('cinder_kaminario').enable_multipath_2 ,$.get('cinder_kaminario').enable_multipath_3 ,$.get('cinder_kaminario').enable_multipath_4 ,$.get('cinder_kaminario').enable_multipath_5)"
   parameters:
     puppet_manifest: puppet/manifests/cinder_multipath.pp
     puppet_modules:  puppet/modules:/etc/puppet/modules
