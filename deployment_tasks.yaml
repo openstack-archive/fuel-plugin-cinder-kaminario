@@ -17,8 +17,6 @@
   groups: [primary-controller,controller]
   requires: [openstack-cinder]
   required_for: [deploy_end]
-  condition:
-    yaql_exp: "changedAny($.storage, $.cinder_kaminario)"
   parameters:
     puppet_manifest: puppet/manifests/cinder_controller_config.pp
     puppet_modules: puppet/modules:/etc/puppet/modules
