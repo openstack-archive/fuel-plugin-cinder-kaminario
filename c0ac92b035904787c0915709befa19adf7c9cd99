@@ -1,0 +1,8 @@
+Code-Review+2: Pradip Rawat <Pradip.Rawat.CTR@kaminario.com>
+Workflow+1: Pradip Rawat <Pradip.Rawat.CTR@kaminario.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 30 Nov 2016 05:32:00 +0000
+Reviewed-on: https://review.openstack.org/404542
+Project: openstack/fuel-plugin-cinder-kaminario
+Branch: refs/heads/master
