@@ -13,7 +13,7 @@ attributes:
     type: "radio"
     weight: 10
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -22,42 +22,36 @@ attributes:
 
   cinder_node_0:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 15
     type: "text"
 
   backend_name_0:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 20
     type: "text"
 
   storage_ip_0:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
-    weight: 20
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
+    weight: 22
     type: "text"
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_0:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 25
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty" 
 
   storage_password_0:
     value: ""
     label: 'Password'
-    description: 'Provide password of kaminario K2 All-Flash array'
+    description: 'The password for accessing K2 management'
     weight: 30
     type: "password"
 
@@ -80,162 +74,96 @@ attributes:
 
   replication_ip_0:
     value: ""
-    label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    label: 'Replication Target IP'
+    description: 'Replication target MGMT IP'
     weight: 45
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_0.value == false"
         action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
-
+ 
   replication_login_0:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 50
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_0.value == false"
         action: 'hide'
+ 
+
 
   replication_password_0:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 55
     type: "password"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_0.value == false"
         action: 'hide'
-
+ 
   replication_rpo_0:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 60
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_0.value == false"        
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
 
-  create_type_0:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 65
-    type: 'checkbox'
-
-  type_name_0:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 70
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_0.value == false"
-        action: 'hide'
-
-  options_0:
-    type: "radio"
-    weight: 75
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_0.value == false"
-        action: 'hide'
-
-  default_type_0:
-    value: false
-    label: 'Default Type'
-    description: 'Make this volume type as default volume type'
-    weight: 80
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_0.value == false "
-        action: 'hide'
 
   enable_multipath_0:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 85
     type: 'checkbox'
  
   suppress_logs_0:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 86
+    type: 'checkbox'
+
+  report_discard_supported_0:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
+    weight: 87
     type: 'checkbox'
 
   filter_function_0:
     value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
-    description: 'Filter function for backend'
-    weight: 87
-    type: "text"
-
-  goodness_function_0:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 88
     type: "text"
 
+
   oversubscription_ratio_0:
     value: false
-    label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
-    weight: 89
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 90
     type: 'checkbox'
 
-  scheduler_default_weighers:
-    value: "CapacityWeigher"
-    label: 'Scheduler  weighers'
-    description: 'Default weighers for scheduler. For enabling multiple weighers, provide weighers seperated by ","'
-    weight: 90
-    type: "text" 
-
-  scheduler_default_filters:
-    value: "DriverFilters"
-    label: 'Scheduler filters'
-    description: 'Default filters for scheduler. For enabling multiple weighers, provide weighers seperated by ","'
-    weight: 91
-    type: "text"
-
-
-  rpc_response_timeout:
-    value: "60"
-    label: 'RPC timeout'
-    description: 'Timeout for RPC. Default timeout is 60'
-    weight: 92
-    type: "text"
 
   add_backend_1:
     value: false
-    label: 'Add a new kaminario backend or scale an existing backend'
-    description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 93
+    label: 'Add a new Backend'
+    description: '' 
+    weight: 94
     type: 'checkbox'
   
   storage_protocol_1:
     type: "radio"
     weight: 95
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -247,8 +175,8 @@ attributes:
 
   cinder_node_1:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 100
     type: "text"
     restrictions:
@@ -257,8 +185,8 @@ attributes:
 
   backend_name_1:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 105
     type: "text"
     restrictions:
@@ -267,36 +195,20 @@ attributes:
 
   storage_ip_1:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
     weight: 110
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_1:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 115
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty"
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  storage_password_1:
-    value: ""
-    label: 'Password'
-    description: 'Provide password of kaminario K2 All-Flash array'
-    weight: 120
-    type: "password"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
@@ -310,24 +222,21 @@ attributes:
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-
+ 
   replication_ip_1:
     value: ""
     label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    description: 'Replication target MGMT IP'
     weight: 130
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_1.value == false"
         action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   replication_login_1:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 135
     type: "text" 
     restrictions:
@@ -337,7 +246,7 @@ attributes:
   replication_password_1:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 140
     type: "password"
     restrictions:
@@ -347,67 +256,17 @@ attributes:
   replication_rpo_1:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 145
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_1.value == false"
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
-
-
-  create_type_1:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 150
-    type: 'checkbox'
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  type_name_1:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 155
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_1.value == false"
-        action: 'hide'
-
-  options_1:
-    type: "radio"
-    weight: 160
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_1.value == false"
-        action: 'hide'
-
-  default_type_1:
-    value: false
-    label: 'Default Type'
-    description: 'Make this volume type as default volume type'
-    weight: 165
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_1.value == false"
-        action: 'hide'
 
   enable_multipath_1:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 170
     type: 'checkbox'
     restrictions:
@@ -415,10 +274,20 @@ attributes:
          action: 'hide'
 
   suppress_logs_1:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 171
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  report_discard_supported_1:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
+    weight: 172
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
@@ -427,40 +296,29 @@ attributes:
   filter_function_1:
     value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
-    description: 'Filter function for backend'
-    weight: 172
-    type: "text"
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  goodness_function_1:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 173
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+
   oversubscription_ratio_1:
     value: false
-    label: 'Oversubscription Ratio'
-    description: ''
-    weight: 174
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 175
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
-
-
   add_backend_2:
     value: false
-    label: 'Add a new kaminario backend or scale an existing backend'
-    description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 175
+    label: 'Add a new Backend'
+    description: '' 
+    weight: 176
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
@@ -470,7 +328,7 @@ attributes:
     type: "radio"
     weight: 180
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -482,8 +340,8 @@ attributes:
 
   cinder_node_2:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 185
     type: "text"
     restrictions:
@@ -492,8 +350,8 @@ attributes:
 
   backend_name_2:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 190
     type: "text"
     restrictions:
@@ -502,26 +360,20 @@ attributes:
 
   storage_ip_2:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
     weight: 195
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_2:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 200
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
@@ -529,7 +381,7 @@ attributes:
   storage_password_2:
     value: ""
     label: 'Password'
-    description: 'Provide password of kaminario K2 All-Flash array'
+    description: 'The password for accessing K2 management'
     weight: 205
     type: "password"
     restrictions:
@@ -548,21 +400,18 @@ attributes:
 
   replication_ip_2:
     value: ""
-    label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    label: 'Replication Target IP'
+    description: 'Replication target MGMT IP'
     weight: 215
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_2.value == false"
         action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   replication_login_2:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 220
     type: "text" 
     restrictions:
@@ -572,7 +421,7 @@ attributes:
   replication_password_2:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 225
     type: "password"
     restrictions:
@@ -582,66 +431,17 @@ attributes:
   replication_rpo_2:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 230
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_2.value == false"
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
-
-  create_type_2:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 235
-    type: 'checkbox'
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  type_name_2:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 240
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_2.value == false"
-        action: 'hide'
-
-  options_2:
-    type: "radio"
-    weight: 245
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable  nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_2.value == false"
-        action: 'hide'
-
-  default_type_2:
-    value: false
-    label: 'Default_type'
-    description: 'Make this volume type as default volume type'
-    weight: 250
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_2.value == false"
-        action: 'hide'
 
   enable_multipath_2:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 260
     type: 'checkbox'
     restrictions:
@@ -649,40 +449,42 @@ attributes:
          action: 'hide'
 
   suppress_logs_2:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 261
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-  
-  filter_function_2:
-    value: "capabilities.total_volumes < 250"
-    label: 'Filter Function'
-    description: 'Filter function for backend'
+
+  report_discard_supported_2:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
     weight: 262
-    type: "text"
+    type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
-  goodness_function_2:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+  
+  filter_function_2:
+    value: "capabilities.total_volumes < 250"
+    label: 'Filter Function'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 263
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+
   oversubscription_ratio_2:
     value: false
-    label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
-    weight: 264
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 265
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -692,9 +494,9 @@ attributes:
 
   add_backend_3:
     value: false
-    label: 'Add a new kaminario backend or scale an existing backend'
-    description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 265
+    label: 'Add a new Backend'
+    description: '' 
+    weight: 266
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -704,7 +506,7 @@ attributes:
     type: "radio"
     weight: 270
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -716,8 +518,8 @@ attributes:
 
   cinder_node_3:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 275
     type: "text"
     restrictions:
@@ -725,8 +527,8 @@ attributes:
          action: 'hide'
   backend_name_3:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 280
     type: "text"
     restrictions:
@@ -735,26 +537,20 @@ attributes:
 
   storage_ip_3:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
     weight: 285
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_3:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 290
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
@@ -762,7 +558,7 @@ attributes:
   storage_password_3:
     value: ""
     label: 'Password'
-    description: 'Provide management password of kaminario K2 All-Flash array'
+    description: 'The password for accessing K2 management'
     weight: 295
     type: "password"
     restrictions:
@@ -781,21 +577,18 @@ attributes:
 
   replication_ip_3:
     value: ""
-    label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    label: 'Replication Target IP'
+    description: 'Replication target MGMT IP'
     weight: 305
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_3.value == false"
         action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   replication_login_3:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 310
     type: "text" 
     restrictions:
@@ -805,7 +598,7 @@ attributes:
   replication_password_3:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 315
     type: "password"
     restrictions:
@@ -815,66 +608,18 @@ attributes:
   replication_rpo_3:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 320
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_3.value == false"
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
 
-  create_type_3:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 321
-    type: 'checkbox'
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  type_name_3:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 325
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_3.value == false"
-        action: 'hide'
-
-  options_3:
-    type: "radio"
-    weight: 330
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_3.value == false"
-        action: 'hide'
-
-  default_type_3:
-    value: false
-    label: 'Default_type'
-    description: 'Make this volume type as default volume type'
-    weight: 335
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_3.value == false"
-        action: 'hide'
 
   enable_multipath_3:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 340
     type: 'checkbox'
     restrictions:
@@ -882,10 +627,20 @@ attributes:
          action: 'hide'
 
   suppress_logs_3:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 341
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  report_discard_supported_3:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
+    weight: 342
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -894,28 +649,19 @@ attributes:
   filter_function_3:
     value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
-    description: 'Filter function for backend'
-    weight: 342
-    type: "text"
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  goodness_function_3:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 343
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+
   oversubscription_ratio_3:
     value: false
-    label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
-    weight: 344
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 345
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -924,9 +670,9 @@ attributes:
 
   add_backend_4:
     value: false
-    label: 'Add a new kaminario backend or scale an existing backend'
-    description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 345
+    label: 'Add a new Backend'
+    description: '' 
+    weight: 346
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -936,7 +682,7 @@ attributes:
     type: "radio"
     weight: 350
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -948,8 +694,8 @@ attributes:
 
   cinder_node_4:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 355
     type: "text"
     restrictions:
@@ -958,8 +704,8 @@ attributes:
 
   backend_name_4:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 360
     type: "text"
     restrictions:
@@ -968,26 +714,20 @@ attributes:
 
   storage_ip_4:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
     weight: 365
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_4:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 370
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
@@ -995,7 +735,7 @@ attributes:
   storage_password_4:
     value: ""
     label: 'Password'
-    description: 'Provide password of kaminario K2 All-Flash array'
+    description: 'The password for accessing K2 management'
     weight: 375
     type: "password"
     restrictions:
@@ -1014,21 +754,18 @@ attributes:
 
   replication_ip_4:
     value: ""
-    label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    label: 'Replication Target IP'
+    description: 'Replication target MGMT IP'
     weight: 385
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_4.value == false"
         action: 'hide'   
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   replication_login_4:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 390
     type: "text" 
     restrictions:
@@ -1038,7 +775,7 @@ attributes:
   replication_password_4:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 395
     type: "password"
     restrictions:
@@ -1048,67 +785,17 @@ attributes:
   replication_rpo_4:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 400
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_4.value == false"
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
-
-
-  create_type_4:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 405
-    type: 'checkbox'
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  type_name_4:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 410
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_4.value == false"
-        action: 'hide'
-
-  options_4:
-    type: "radio"
-    weight: 415
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_4.value == false"
-        action: 'hide'
-
-  default_type_4:
-    value: false
-    label: 'Default type'
-    description: 'Make this volume type as default volume type'
-    weight: 420
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_4.value == false"
-        action: 'hide'
 
   enable_multipath_4:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 425
     type: 'checkbox'
     restrictions:
@@ -1116,10 +803,20 @@ attributes:
          action: 'hide'
 
   suppress_logs_4:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 426
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  report_discard_supported_4:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
+    weight: 427
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -1128,28 +825,19 @@ attributes:
   filter_function_4:
     value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
-    description: 'Filter function for backend'
-    weight: 427
-    type: "text"
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  goodness_function_4:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 428
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+
   oversubscription_ratio_4:
     value: false
-    label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
-    weight: 429
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 430
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -1159,9 +847,9 @@ attributes:
 
   add_backend_5:
     value: false
-    label: 'Add a new kaminario backend or scale an existing backend'
-    description: 'Add a new kaminario backend or scale an existing backend' 
-    weight: 430
+    label: 'Add a new Backend'
+    description: '' 
+    weight: 431
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -1171,7 +859,7 @@ attributes:
     type: "radio"
     weight: 435
     value: "FC"
-    label: "Storage protocol to be used on the data path with storage system"
+    label: "Storage connection types"
     values:
       - data: "ISCSI"
         label: "ISCSI"
@@ -1183,8 +871,8 @@ attributes:
 
   cinder_node_5:
     value: ""
-    label: 'Cinder Node'
-    description: 'Name of the cinder node in which the backend must be configured'
+    label: 'Cinder Volume Node'
+    description: 'Name of the Fuel node with cinder role'
     weight: 440
     type: "text"
     restrictions:
@@ -1193,8 +881,8 @@ attributes:
 
   backend_name_5:
     value: ""
-    label: 'Backend Name'
-    description: 'Name of the Backend'
+    label: 'Volume Backend Name'
+    description: 'A user defined name for a back-end storage'
     weight: 445
     type: "text"
     restrictions:
@@ -1203,26 +891,20 @@ attributes:
 
   storage_ip_5:
     value: ""
-    label: 'Kaminario Storage Hostname/IP'
-    description: 'Provide management IP of kaminario K2 All-Flash array'
+    label: 'K2 Management IP'
+    description: 'The Management IP for the K2 back-end storage system'
     weight: 450
     type: "text"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   storage_user_5:
     value: ""
     label: 'Username'
-    description: 'Provide username of kaminario K2 All-Flash array'
+    description: 'The user name for accessing K2 management'
     weight: 455
     type: "text"
-    regex:
-      source: '\S'
-      error: "Username field cannot be empty"
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
@@ -1230,7 +912,7 @@ attributes:
   storage_password_5:
     value: ""
     label: 'Password'
-    description: 'Provide password of kaminario K2 All-Flash array'
+    description: 'The password for accessing K2 management'
     weight: 460
     type: "password"
     restrictions:
@@ -1249,21 +931,18 @@ attributes:
 
   replication_ip_5:
     value: ""
-    label: 'IPaddress'
-    description: 'Ipaddress of Kaminario replication array'
+    label: 'Replication Target IP'
+    description: 'Replication target MGMT IP'
     weight: 470
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_5.value == false"
         action: 'hide'   
-    regex:
-      source: '^\w[\w\-\s.]+$'
-      error: 'Invalid IP ranges'
 
   replication_login_5:
     value: ""
     label: 'Username'
-    description: 'user name of Kaminario replication device'
+    description: 'Replication target username'
     weight: 475
     type: "text" 
     restrictions:
@@ -1273,7 +952,7 @@ attributes:
   replication_password_5:
     value: ""
     label: 'Password'
-    description: 'password of Kaminario replication device'
+    description: 'Replication target password'
     weight: 480
     type: "password"
     restrictions:
@@ -1283,67 +962,17 @@ attributes:
   replication_rpo_5:
     value: "60"
     label: 'RPO'
-    description: 'Value (in seconds) should be either 60 sec or multiple of 300 sec'
+    description: 'Replication recovery point objective in seconds. Must be eighter 60 or multiplies of 300'
     weight: 485
     type: "text"
     restrictions:
       - condition: "settings:cinder_kaminario.enable_replication_5.value == false"
         action: 'hide'
-    regex:
-      source: '^\d+$'
-      error: "You must provide a number"
-
-
-  create_type_5:
-    value: false
-    label: 'Create Volume Type'
-    description: 'Create volume type for the backend'
-    weight: 490
-    type: 'checkbox'
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  type_name_5:
-    value: ""
-    label: 'Volume Type Name'
-    description: 'Name of the volume type'
-    weight: 495
-    type: "text"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_5.value == false"
-        action: 'hide'
-
-  options_5:
-    type: "radio"
-    weight: 500
-    value: ""
-    label: "Advance options for volume type"
-    values:
-      - data: "enable_replication_type"
-        label: "Enable Replication"
-      - data: "enable_dedup"
-        label: "Enable nodedup"
-      - data: "replication_dedup"
-        label: "Enable both Replication and nodedup"
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_5.value == false"
-        action: 'hide'
-
-  default_type_5:
-    value: false
-    label: 'Default Type'
-    description: 'Make this volume type as default volume type'
-    weight: 505
-    type: 'checkbox'
-    restrictions:
-      - condition: "settings:cinder_kaminario.create_type_5.value == false"
-        action: 'hide'
 
   enable_multipath_5:
-    value: false
+    value: true
     label: 'Enable Multipath'
-    description: 'Enable multipath for cinder volumes'
+    description: 'Use initiator multipath option'
     weight: 510
     type: 'checkbox'
     restrictions:
@@ -1351,10 +980,20 @@ attributes:
          action: 'hide'
 
   suppress_logs_5:
-    value: false
-    label: 'Suppress Logs'
-    description: 'Suppress Additional logs created by krest'
+    value: true
+    label: 'Suppress SSL Warnings'
+    description: 'Supress requests library SSL certificate warnings'
     weight: 511
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
+  report_discard_supported_5:
+    value: true
+    label: 'Report Discard Supported'
+    description: 'Report to clients of Cinder that the backend supports discard (aka. trim/unmap)'
+    weight: 512
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
@@ -1363,17 +1002,7 @@ attributes:
   filter_function_5:
     value: "capabilities.total_volumes < 250"
     label: 'Filter Function'
-    description: 'Filter function for backend'
-    weight: 512
-    type: "text"
-    restrictions:
-       - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
-         action: 'hide'
-
-  goodness_function_5:
-    value: ""
-    label: 'Goodness Function'
-    description: 'Goodness function for backend'
+    description: 'Set a limit on total number of volumes that will be created on the K2 array'
     weight: 513
     type: "text"
     restrictions:
@@ -1381,12 +1010,380 @@ attributes:
          action: 'hide'
 
 
+
   oversubscription_ratio_5:
     value: false
-    label: 'Oversubscription Ratio'
-    description: 'Enable Oversubscription Ratio for backend If "auto_calc_max_oversubscription_ratio = True", kaminario driver will calculate dynamically "max_over_subscription_ratio"'
-    weight: 514
+    label: 'Over-subscription Ratio'
+    description: 'Thin provisioning settings. False (default)- uses the default value of x20; True-calculates reduction rate based on the existing data'
+    weight: 515
     type: 'checkbox'
     restrictions:
        - condition: "settings:cinder_kaminario.add_backend_5.value != true or settings:cinder_kaminario.add_backend_4.value != true or settings:cinder_kaminario.add_backend_3.value != true or settings:cinder_kaminario.add_backend_2.value != true or settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
+
+
+
+
+  create_type_0:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 520
+    type: 'checkbox'
+
+  type_name_0:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 525
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  type_backendname_0:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 527
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  type_enable_replication_0:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 530
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  enable_nodedup_0:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 535
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  default_type_0:
+    value: false
+    label: 'Default Type'
+    description: 'Make this volume type the default volume type'
+    weight: 540
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_0.value == false "
+        action: 'hide'
+
+  create_type_1:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 545
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.create_type_0.value != true"
+         action: 'hide'
+
+  type_name_1:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 550
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_1.value == false or settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  type_backendname_1:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 553
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_1.value == false or settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  type_enable_replication_1:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 555
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_1.value == false or settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  enable_nodedup_1:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 560
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_1.value == false or settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+
+  default_type_1:
+    value: false
+    label: 'Default Type'
+    description: 'Make this volume type the default volume type'
+    weight: 565
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_1.value == false or settings:cinder_kaminario.create_type_0.value == false"
+        action: 'hide'
+
+  create_type_2:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 570
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+         action: 'hide'
+
+  type_name_2:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 575
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_2.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+        action: 'hide'
+
+  type_backendname_2:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 577
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_2.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+        action: 'hide'
+
+  type_enable_replication_2:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 580
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_2.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+        action: 'hide'
+
+  enable_nodedup_2:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 585
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_2.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+        action: 'hide'
+
+
+  default_type_2:
+    value: false
+    label: 'Default_type'
+    description: 'Make this volume type the default volume type'
+    weight: 590
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_2.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true"
+        action: 'hide'
+
+
+
+  create_type_3:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 595
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+         action: 'hide'
+
+  type_name_3:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 600
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_3.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+        action: 'hide'
+
+  type_backendname_3:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 603
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_3.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+        action: 'hide'
+
+  type_enable_replication_3:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 605
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_3.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+        action: 'hide'
+
+  enable_nodedup_3:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 610
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_3.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+        action: 'hide'
+
+  default_type_3:
+    value: false
+    label: 'Default_type'
+    description: 'Make this volume type the default volume type'
+    weight: 615
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_3.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true"
+        action: 'hide'
+
+
+  create_type_4:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 620
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+         action: 'hide'
+
+  type_name_4:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 625
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_4.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+        action: 'hide'
+
+  type_backendname_4:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 627
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_4.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+        action: 'hide'
+
+  type_enable_replication_4:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 630
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_4.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+        action: 'hide'
+
+  enable_nodedup_4:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 635
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_4.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+        action: 'hide'
+
+  default_type_4:
+    value: false
+    label: 'Default type'
+    description: 'Make this volume type the default volume type'
+    weight: 640
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_4.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true"
+        action: 'hide'
+
+
+  create_type_5:
+    value: false
+    label: 'Add New Volume Type'
+    description: ''
+    weight: 645
+    type: 'checkbox'
+    restrictions:
+       - condition: "settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+         action: 'hide'
+
+  type_name_5:
+    value: ""
+    label: 'Volume Type Name'
+    description: 'Name of the volume type'
+    weight: 650
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_5.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+        action: 'hide'
+
+  type_backendname_5:
+    value: ""
+    label: 'Volume Backend Name'
+    description: 'Name of the Backend that is associated with this type'
+    weight: 653
+    type: "text"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_5.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+        action: 'hide'
+
+  type_enable_replication_5:
+    value: false
+    label: 'Enable Replication'
+    description: 'Enable replication for volume type'
+    weight: 655
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_5.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+        action: 'hide'
+
+  enable_nodedup_5:
+    value: true
+    label: 'Enable Deduplication'
+    description: 'Enable Deduplication for volume type'
+    weight: 660
+    type: "checkbox"
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_5.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+        action: 'hide'
+
+  default_type_5:
+    value: false
+    label: 'Default Type'
+    description: 'Make this volume type the default volume type'
+    weight: 665
+    type: 'checkbox'
+    restrictions:
+      - condition: "settings:cinder_kaminario.create_type_5.value == false or settings:cinder_kaminario.create_type_0.value != true or settings:cinder_kaminario.create_type_1.value != true or settings:cinder_kaminario.create_type_2.value != true or settings:cinder_kaminario.create_type_3.value != true or settings:cinder_kaminario.create_type_4.value != true"
+        action: 'hide'
+

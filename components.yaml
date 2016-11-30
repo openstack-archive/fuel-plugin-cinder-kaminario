@@ -1,6 +1,6 @@
 - name: 'storage:block:backend:kaminario'
   label: 'Kaminario'
-  description: 'Cinder with Kaminario backend'
+  description: 'Use Kaminario K2 as backend for Cinder volumes'
   compatible:
     - name: storage:block:lvm
     - name: storage:block:ceph

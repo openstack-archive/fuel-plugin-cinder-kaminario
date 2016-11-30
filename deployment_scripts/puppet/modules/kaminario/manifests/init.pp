@@ -10,24 +10,24 @@ define recursion(
 $plugin_settings = hiera('cinder_kaminario')
 
             config {"plugin_${value}":
-              add_backend            =>      $plugin_settings["add_backend_${value}"],
-              cinder_node            =>      $plugin_settings["cinder_node_${value}"],
-              storage_protocol       =>      $plugin_settings["storage_protocol_${value}"],
-              backend_name           =>      $plugin_settings["backend_name_${value}"],
-              storage_user           =>      $plugin_settings["storage_user_${value}"],
-              storage_password       =>      $plugin_settings["storage_password_${value}"],
-              storage_ip             =>      $plugin_settings["storage_ip_${value}"],
-              enable_replication     =>      $plugin_settings["enable_replication_${value}"],
-              replication_ip         =>      $plugin_settings["replication_ip_${value}"],
-              replication_login      =>      $plugin_settings["replication_login_${value}"],
-              replication_rpo        =>      $plugin_settings["replication_rpo_${value}"],
-              replication_password   =>      $plugin_settings["replication_password_${value}"],
-              enable_multipath       =>      $plugin_settings["enable_multipath_${value}"],
-              suppress_logs          =>      $plugin_settings["suppress_logs_${value}"],
-              filter_function        =>      $plugin_settings["filter_function_${value}"],
-              goodness_function      =>      $plugin_settings["goodness_function_${value}"],
-              oversubscription_ratio =>      $plugin_settings["oversubscription_ratio_${value}"],
-              num                    =>      $value
+              add_backend            	=>      $plugin_settings["add_backend_${value}"],
+              cinder_node            	=>      $plugin_settings["cinder_node_${value}"],
+              storage_protocol       	=>      $plugin_settings["storage_protocol_${value}"],
+              backend_name           	=>      $plugin_settings["backend_name_${value}"],
+              storage_user           	=>      $plugin_settings["storage_user_${value}"],
+              storage_password       	=>      $plugin_settings["storage_password_${value}"],
+              storage_ip             	=>      $plugin_settings["storage_ip_${value}"],
+              enable_replication     	=>      $plugin_settings["enable_replication_${value}"],
+              replication_ip         	=>      $plugin_settings["replication_ip_${value}"],
+              replication_login      	=>      $plugin_settings["replication_login_${value}"],
+              replication_rpo        	=>      $plugin_settings["replication_rpo_${value}"],
+              replication_password   	=>      $plugin_settings["replication_password_${value}"],
+              enable_multipath       	=>      $plugin_settings["enable_multipath_${value}"],
+              suppress_logs          	=>      $plugin_settings["suppress_logs_${value}"],
+              filter_function        	=>      $plugin_settings["filter_function_${value}"],
+              oversubscription_ratio 	=>      $plugin_settings["oversubscription_ratio_${value}"],
+              report_discard_supported	=>	$plugin_settings["report_discard_supported_${value}"],   
+              num                    	=>      $value
             }
     $minus1 = inline_template('<%= @value.to_i - 1 %>')
     if $minus1 < '0' {
@@ -41,7 +41,7 @@ $plugin_settings = hiera('cinder_kaminario')
 }
 
 
-define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storage_password,$storage_ip,$num,$cinder_node,$enable_replication,$replication_ip,$replication_login,$replication_rpo,$replication_password,$enable_multipath,$suppress_logs,$filter_function,$oversubscription_ratio,$goodness_function) {
+define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storage_password,$storage_ip,$num,$cinder_node,$enable_replication,$replication_ip,$replication_login,$replication_rpo,$replication_password,$enable_multipath,$suppress_logs,$filter_function,$oversubscription_ratio,$report_discard_supported) {
 
   $sec_name = section_name( $storage_ip , $backend_name )
   $config_file = '/etc/cinder/cinder.conf'
@@ -99,17 +99,18 @@ define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storag
     }
     }
 
-    if $goodness_function != '' {
-    cinder_config {
-        "${sec_name}/goodness_function"                      : value => $goodness_function;
-    }
-    }
-
     if $oversubscription_ratio == true {
     cinder_config {
         "${sec_name}/auto_calc_max_oversubscription_ratio"   : value => 'True';
     }
     }
+
+    if $report_discard_supported == true {
+    cinder_config {
+        "${sec_name}/report_discard_supported"  : value => 'True';
+    }   
+    } 
+
 }
 }
 }

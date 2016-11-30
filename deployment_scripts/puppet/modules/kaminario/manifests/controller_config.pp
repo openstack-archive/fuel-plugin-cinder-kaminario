@@ -3,7 +3,7 @@ class kaminario::controller_config{
 $config_file='/etc/cinder/cinder.conf'
 $plugin_settings = hiera('cinder_kaminario')
 
-  if $plugin_settings['scheduler_default_filters'] != ''
+  if ($plugin_settings['filter_function_0'] != '') or ($plugin_settings['filter_function_1'] != '') or ($plugin_settings['filter_function_2'] != '') or ($plugin_settings['filter_function_3'] != '') or ($plugin_settings['filter_function_4'] != '') or ($plugin_settings['filter_function_5'] != '') 
   {
   ini_subsetting {'scheduler_default_filters':
     ensure               => present,
@@ -11,23 +11,20 @@ $plugin_settings = hiera('cinder_kaminario')
     key_val_separator    => '=',
     path                 => $config_file,
     setting              => 'scheduler_default_filters',
-    subsetting           => $plugin_settings['scheduler_default_filters'],
+    subsetting           => 'DriverFilters',
+    subsetting_separator => ',',
+  }
+
+  ini_subsetting {'scheduler_default_filter':
+    ensure               => present,
+    section              => 'DEFAULT',
+    key_val_separator    => '=',
+    path                 => $config_file,
+    setting              => 'scheduler_default_filters',
+    subsetting           => 'CapacityFilter',
     subsetting_separator => ',',
   }
   }
-  if $plugin_settings['scheduler_default_weighers'] != ''
-  {
-  cinder_config {
-    'DEFAULT/scheduler_default_weighers'       : value => $plugin_settings['scheduler_default_weighers'];
-  }
-  }
-  if $plugin_settings['rpc_response_timeout'] != ''
-  {
-  cinder_config {
-    'DEFAULT/rpc_response_timeout'             : value => $plugin_settings['rpc_response_timeout'];
-  }
-  }
-
   cinder_config {
     'DEFAULT/default_volume_type'             : value => $default_volume_type
   }

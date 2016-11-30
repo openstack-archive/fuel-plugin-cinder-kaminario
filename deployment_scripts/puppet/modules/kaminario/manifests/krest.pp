@@ -5,6 +5,6 @@ package { 'krest':
   ensure => installed,
   provider => pip,
   require => Package['python-pip'],}
-  package { 'git':
+package { 'git':
   ensure => installed,}
 }

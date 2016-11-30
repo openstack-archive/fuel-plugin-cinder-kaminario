@@ -16,4 +16,4 @@ Contents:
    installation
    plugin_configuration
    guide
-
+   troubleshooting
