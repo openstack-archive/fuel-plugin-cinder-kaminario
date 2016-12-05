@@ -3,7 +3,7 @@
 Install Kaminario Cinder Plugin
 ===============================
 
-Before you install Kaminario Cinder Plugin. You must have the Fuel Master node installed and configured before you can install the plugin. Typically, you install a Fuel plugin before you deploy an OpenStack environment.   
+Before you install Kaminario Cinder Plugin ensure that you have installed and configured the Fuel Master node. Typically, you install a Fuel plugin before you deploy an OpenStack environment.   
 
 **To install Kaminario Cinder Plugin:**
 
@@ -17,7 +17,7 @@ Before you install Kaminario Cinder Plugin. You must have the Fuel Master node i
 
       # scp cinder_kaminario-1.0-1.0.0-1.noarch.rpm root@fuel-master:/tmp
 
-#. Log into Fuel Master node CLI as root.
+#. Log in to Fuel Master node CLI as root.
 #. Install the plugin by typing:
 
    .. code-block:: console

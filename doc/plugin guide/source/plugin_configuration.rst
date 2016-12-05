@@ -2,93 +2,126 @@
 Plugin configuration
 --------------------
 
-**To configure Kaminario Cinder plugin:**
+**To configure Kaminario K2 Cinder plugin:**
 
-* create environment in Fuel web UI by enabling kaminario option which is in Storage Backends tab.
+#. Create an OpenStack environment as described in the `Fuel User Guide <http://docs.openstack.org/developer/fuel-docs/userdocs/fuel-user-guide/create-environment.html>`_:
+
+
+* As part of the Create New OpenStack Environment wizard, click Storage Backends (fourth step in the wizard). The following screen appears: 
 
    .. image:: ./images/new_openstack_environment.png
       :width: 400pt
       :alt: New Openstack Environment
-   
-
-* To configure the plugin go to settings tab and click on storage tab. 
+ 
+* Under Block Storage, select the Kaminario checkbox. 
+* Click Next twice to finish the OpenStack Environment setup. 
 
    .. image:: ./images/openstack_settings.png
       :width: 400pt
       :alt: OpenStack Settings
+ 
+* In the Fuel environment click the Settings tab. 
 
-* Following  are the basic options to configure the Kaminario Cinder Fuel Plugin 
+* In the navigation pane, click Storage snd scroll down to the Kaminario K2 for Cinder section. 
 
-   .. image:: ./images/basic_options.png
+   .. image:: ./images/plugin_full_UI.png
       :width: 400pt
-      :alt: Basic Settings
+      :alt: OpenStack UI Full
 
-*Storage Protocol*: Select ‘ISCSI‘ for Kaminario K2 All-Flash iSCSI array and ‘FC‘ forKaminario K2 All-Flash FC array
 
-*Cinder Node*: Specify the name of the cinder node to configure Kaminario backend
+* Under Storage Connection Types, Select ‘ISCSI‘ for Kaminario K2 iSCSI array or Fiber Channel for Kaminario K2 Fiber Channel array.
 
-*Kaminario storage IP*: Management IP for the Kaminario K2 All-Flash array
+* In the Cinder Volume Node field, enter the name of the Fuel node with Cinder role. 
 
-*Backend Name*: Specify the name for the Kaminario backend
+* In the Volume Backend Name field, enter a name for the backend storage.
 
-*Username*: Specify the username for the Kaminario K2 All-Flash array
+* In the K2 Management IP field, enter the manaagement IP address for the K2 backend storage system.
 
-*Password*: Specify the corresponding password for the user
+* In the username field, enter the username for accessing the K2 management.  
 
-* To add details of replication peer, check ‘Enable Replication‘ box and fill the following details
+* In the password field, enter the password for accessing the K2 management.
+
+* In the Enable Replication checkbox, select the check box if you wish to enable replication for the K2 array. 
+
+* In te Enable Multipath checkbox, select the check box if you wish to enable the multipath option.
+
+* In the Surpress SSL Warnings checkbox, select the if you wish to suppress requests library SSL certificate warnings.
+
+* In the Report Discard Supported checkbox if you wish to enable trim/unmap.
+
+* In the Filter Function field, enter a limit on total number of volumes that will be created on the K2 array.
+
+* In the Over-Subscription checkbox, configure the provisioning settings. If you don't select the checkbox the system will use the default value of x20; 
+
+  Selecting the checkbox, calculates the reduction rate based on the existing data.
+
+**Adding a new backend**
+
+If you want to configure multiple K2 backends, follow the steps below.
+
+To add a new backend
+
+* Select the Add a New Backend checkbox.
+
+New fields appear for the second backend
+
+* Fill in the new backend fields by repeating the steps mentioned above. 
+
+**Adding a new volume type**
+
+You can define a new volume type. Volume types will be associated with specific backends. The volume back-end names can be any user-defined name. For each volume type, you should specify an attribute that will determine if the volume type includes deduplication and/or replication.
+
+The system includes the following default settings: 
+
+Deduplication is enabled
+
+Replication is disabled
+
+   .. image:: ./images/add_new_volume.png
+      :width: 400pt
+      :alt: New Volume Type
+
+
+* Select the Add New Volume Type checkbox.
+
+New fields appear for configuring the new volume type.
+
+* In the Volume Type Name field, enter a user-defined and unique name for the volume type. 
+
+* In the Volume Backend Name, enter the name of the backend that will be associated with this volume type. 
+
+* If the volume type should include replication, select the Enable Replication checkbox. 
+
+* If the volume type should not include deduplication, select the Enable Deduplication checkbox.
+
+* If you want to make this volume type the defualt volume type (Cinder will use this volume type when no other volume type have been specified), select the Default Type checkbox.
+
+* To create additional volume types, select the Add New Volume Type checkbox and repeat the steps above. 
+
+**Configuring Replication**
+
+As part of the configuration of the backend storage, you can configure replication. 
 
    .. image:: ./images/replication.png
       :width: 400pt
       :alt: Replication
 
-*IP address*: Specify the IP address for the replication peer
 
-*Username*: Specify the username for the replication peer
+To configure replication:
 
-*Password*: Specify the corresponding password for the user
+* Select the Enable Replication checkbox.
 
-*RPO*: Specify RPO value for replication, it should either 60 sec or multiples of 300 secs.
+New fields appear for configuring the replication target. 
 
-* To create a volume type check the ‘Create Volume Type‘ box and fill the following details
+* In the Replication Target IP field, enter the replication target management IP address.
 
-   .. image:: ./images/create_volume_type.png
-      :width: 400pt
-      :alt: Create volume type
+* In the Username field, enter the username for accessing the replication target. 
 
-*Volume Type Name*: Specify a name for the volume type
+* In the Password field, enter the password for accessing the replication target. 
 
-*Advanced options*: To enable advanced functionalities like replication and nodedup check any one of three options
+* In the RPO field, enter the recovery objective point in seconds. The value must be either 60 or multiples of 300 seconds. 
 
-   .. image:: ./images/options.png
-      :width: 400pt
-      :alt: Options
+If you have completed the configuration, click Save Settings. 
+   
 
-*Default Type*: Check If the above-created volume type should be default volume type
 
-*Enable Multipath*: Check this box in order to use multipath in cinder and nova
-
-*Suppress logs*: Check this box in order to suppress python ‘requests‘ library warnings.
-
-*Filter function*: Specify Filter function(optional)
-
-*goodness function*: Specify goodness function(optional)
-
-*Oversubscription Ratio*: If this is checked kaminario driver will calculate dynamically "max_over_subscription_ratio".
-
-*Scheduler filters*: In order to enable scheduler filters explicitly, specify filter name separated by comma
-
-*Scheduler weighers*: In order to enable scheduler weigher explicitly, specify weigher name separated by comma
-
-*RPC Timeout*: Specify the rpc timeout, the default timeout is 60 sec
-
-   .. image:: ./images/new_backend.png
-      :width: 400pt
-      :alt: New backend
-
-Check this option to add a new ‘Kaminario K2 All-Flash array‘ as a new backend or to scale the existing backend.
-
-* Specify new ‘volume_backend_name‘ to add a new backend 
-
-* Use same ‘volume_backend_name‘ if scale an existing backend. This plugin supports the addition of 5 extra backends.
-
-This plugin is hot pluggable.One can deploy it again without disturbing the existing backends or existing setup.

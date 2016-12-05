@@ -1,7 +1,7 @@
 Verification
 ============
 
-Login into the controller node from the Fuel-master node:
+Log in to the controller node from the Fuel-master node:
 
 1. Verify the status of cinder-volume service for Kaminario backend
 
@@ -43,14 +43,14 @@ Login into the controller node from the Fuel-master node:
 Troubleshooting
 ===============
 
-On failure of the verification of Kaminario Fuel plugin or any Cinder volume operations related to the Kaminario backend, check the following log files for identifying the root cause of the failure:
+On failure of the verification of Kaminario Fuel plugin or any Cinder volume operations related to the Kaminario backend, check the following log files to identify the root cause of the failure:
 
 #. **/var/log/cinder/cinder-volume.log**
 #. **/var/log/cinder/cinder-api.log**
 #. **/var/log/cinder/cinder-scheduler.log**
 #. **/var/log/nova/nova-compute.log**
 
-Check the status of cinder volume service for Kaminario backend.
+Check the status of cinder volume service for Kaminario K2 backend.
 
    .. code-block:: console
 
@@ -60,10 +60,10 @@ Check the status of cinder volume service for Kaminario backend.
       :width: 400pt
       :alt: cinder_service_list
 
-The failures may be caused due to many possibilities, the following are few of them:
+The failures may be caused due to many causes, the following are few of them:
 
-1. Kaminario rest-api version is less than 2.2.0.
-2. Kaminario K2 all-flash array version is less than 5.8.
+1. Kaminario rest-api version is lower than 2.2.0.
+2. Kaminario K2 all-flash array version is lower than 5.8.
 3. Data path between the Fuel nodes (having cinder and compute role) and the Kaminario K2 all-flash array is not present or inaccessible:
 
    .. image:: ./images/FC_HBA.png
@@ -82,6 +82,6 @@ The failures may be caused due to many possibilities, the following are few of t
 
 4. Management IP of the Kaminario backend is not correct or inaccessible from the Fuel node having the Cinder role.
 5. Wrong credentials (username and password) used for the Kaminario backend.
-6. Not using the Kaminario Fuel plugin configuration options for; creating volume type and setting default volume type.
-7. No proper use of Kaminario Fuel plugin configuration options like Filter Function, Goodness Function, Scheduler weighers and Scheduler filters.
+6. Improper configuration of the Kaminario Fuel plugin configuration options for; creating volume type and setting default volume type.
+7. Improper use of Kaminario Fuel plugin configuration options like Filter Function, Goodness Function, Scheduler weighers and Scheduler filters.
 8. Others.
