@@ -82,9 +82,10 @@ define config($add_backend,$storage_protocol,$backend_name,$storage_user,$storag
     }
 
     if $enable_multipath == true {
+    package { sg3-utils: ensure => 'installed' }
+    package { multipath-tools: ensure => 'installed' }
     cinder_config {
         "${sec_name}/use_multipath_for_image_xfer"           : value => 'True';
-        "${sec_name}/enforce_multipath_for_image_xfer"       : value => 'True';
     }
     }
     if $suppress_logs == true {

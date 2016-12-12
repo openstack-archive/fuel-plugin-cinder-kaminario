@@ -213,6 +213,16 @@ attributes:
        - condition: "settings:cinder_kaminario.add_backend_1.value != true"
          action: 'hide'
 
+  storage_password_1:
+    value: ""
+    label: 'Password'
+    description: 'The password for accessing K2 management'
+    weight: 120
+    type: "password"
+    restrictions:
+       - condition: "settings:cinder_kaminario.add_backend_1.value != true"
+         action: 'hide'
+
   enable_replication_1:
     value: false
     label: 'Enable Replication'

@@ -7,7 +7,6 @@
 Guide to the <PLUGIN NAME> plugin ver. <6-digit format>
 =======================================================
 
-Contents:
 
 .. toctree::
    :maxdepth: 2

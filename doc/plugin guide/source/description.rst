@@ -3,12 +3,13 @@
 Overview of the Kaminario Cinder plugin
 =======================================
 
-The Kaminario cinder fuel plugin helps configure Kaminario iSCSI and FC cinder drivers for Kaminario K2 All-Flash arrays in Mirantis Fuel OpenStack setup.It enables configuration of one or many Kaminario K2 backends. It installs the “krest” python library on cinder-volume node which is prerequisite for Kaminario iSCSI and FC cinder drivers.It enables configuration of various cinder and Kaminario specific options.
+The Kaminario Cinder Plugin for Fuel  assists in the configuration of the Kaminario Cinder driver for Kaminario K2 All-Flash array. The plugin enables configuration of one or many Kaminario K2 back-ends by installing the “krest” python library on cinder-volume node which is prerequisite for Kaminario iSCSI and FC cinder drivers.
 
 Software prerequisites 
 ----------------------
 
-To use the Kaminario Cinder plugin, verify that your environment meets the following prerequisites:
+To use the Kaminario Cinder plugin for Fuel, verify that your environment meets the following prerequisites:
+
 
 ============================  ======================================
 Prerequisites                 Version/Comment
@@ -18,9 +19,10 @@ Kaminario K2 All Flash Array  K2 rest api version should be >= 2.2.0
 ============================  ======================================
 
 
+
 * The Kaminario K2 All-Flash array should be configured with data and management path to the cinder volume nodes and data path to the nova compute nodes.
 
-* For replication, replication peer should be configured
+* To enable replication, a replication peer must be configured. 
 
 Limitations
 -----------
