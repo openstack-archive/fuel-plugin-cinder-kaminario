@@ -22,7 +22,7 @@ Plugin configuration
  
 #. In the Fuel environment, click the **Settings** tab. 
 
-#. In the navigation pane, click **Storage** snd scroll down to the **Kaminario K2 for Cinder** section. 
+#. In the navigation pane, click **Storage** and scroll down to the **Kaminario K2 for Cinder** section. 
 
    .. image:: ./images/plugin_full_UI.png
       :width: 400pt
@@ -51,9 +51,10 @@ Plugin configuration
 
 #. In the **Filter Function** field, enter a limit on total number of volumes that will be created on the K2 array.
 
-   example: "capabilities.total_volumes < 250"
+   example: capabilities.total_volumes < 250
 
 #. In the **Over-Subscription Ratio** checkbox, if you don’t select the checkbox the system will use the default value of x20; Selecting the checkbox, calculates the reduction rate based on the existing data. 
+
 
 Adding a new backend
 --------------------
@@ -133,4 +134,13 @@ As part of the configuration of the backend storage, you can configure replicati
 If you have completed the configuration, click **Save Settings**. 
    
 
+Network Verification:
+----------------------
 
+#. In the Fuel environment, click the **Networks** tab.
+
+#. In the navigation pane, click **Connectivity Check** and click on **Verify Networks** button to perform Connectivity Check.
+
+   .. image:: ./images/network_verification.png
+      :width: 400pt
+      :alt: Network Verification

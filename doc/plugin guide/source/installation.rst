@@ -7,7 +7,7 @@ Before you install Kaminario Cinder Plugin for Fuel ensure that you have install
 
 **To install Kaminario Cinder Plugin:**
 
-#. Download  from the `Fuel Plugins Catalog`_.
+#. Download  from the `Marintis Patner Page`_.
 
 #. Copy the plugin ``.rpm`` package to the Fuel Master node:
 
@@ -34,4 +34,4 @@ Before you install Kaminario Cinder Plugin for Fuel ensure that you have install
      1  | cinder_kaminario-1.0-1.0.0-1.noarch.rpm        | 1.0.0   | 4.0.0
 
 
-.. _Fuel Plugins Catalog: https://www.mirantis.com/products/openstack-drivers-and-plugins/fuel-plugins/
+.. _Marintis Patner Page: https://www.mirantis.com/partners/kaminario/
